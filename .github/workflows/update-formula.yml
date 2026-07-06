@@ -1,0 +1,53 @@
+name: update-formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "nosh version (e.g. 0.2.1)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: download release assets
+        run: |
+          version="${{ inputs.version }}"
+          mkdir -p /tmp/nosh-release
+          curl -sSL -o /tmp/nosh-release/nosh-aarch64-apple-darwin.tar.gz \
+            "https://github.com/gosantos/nosh/releases/download/v${version}/nosh-aarch64-apple-darwin.tar.gz"
+          curl -sSL -o /tmp/nosh-release/nosh-x86_64-apple-darwin.tar.gz \
+            "https://github.com/gosantos/nosh/releases/download/v${version}/nosh-x86_64-apple-darwin.tar.gz"
+
+      - name: checksum
+        id: hash
+        run: |
+          cd /tmp/nosh-release
+          arm=$(shasum -a 256 nosh-aarch64-apple-darwin.tar.gz | awk '{print $1}')
+          intel=$(shasum -a 256 nosh-x86_64-apple-darwin.tar.gz | awk '{print $1}')
+          echo "arm=$arm" >> $GITHUB_OUTPUT
+          echo "intel=$intel" >> $GITHUB_OUTPUT
+
+      - name: update formula
+        run: |
+          version="${{ inputs.version }}"
+          sed -i '' "s/^  version \".*\"/  version \"$version\"/" Formula/nosh.rb
+          sed -i '' "s|/download/v[0-9.]*/nosh-aarch64|/download/v$version/nosh-aarch64|" Formula/nosh.rb
+          sed -i '' "s|/download/v[0-9.]*/nosh-x86_64|/download/v$version/nosh-x86_64|" Formula/nosh.rb
+          sed -i '' "s/sha256 \".*\" # arm/sha256 \"${{ steps.hash.outputs.arm }}\" # arm/" Formula/nosh.rb
+          sed -i '' "s/sha256 \".*\" # intel/sha256 \"${{ steps.hash.outputs.intel }}\" # intel/" Formula/nosh.rb
+
+      - name: commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/nosh.rb
+          git commit -m "bump to v${{ inputs.version }}" || echo "no changes"
+          git push origin main
