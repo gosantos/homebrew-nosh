@@ -1,15 +1,15 @@
 class Nosh < Formula
   desc "TUI todo and notes manager"
   homepage "https://github.com/gosantos/nosh"
-  version "0.3.0"
+  version "0.3.1"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/gosantos/nosh/releases/download/v0.3.0/nosh-aarch64-apple-darwin.tar.gz"
-      sha256 "0769721dee95d840a56fd92ddfcc7623d7cec86284bf1f394645da1f6a9a874d" # arm
+      url "https://github.com/gosantos/nosh/releases/download/v0.3.1/nosh-aarch64-apple-darwin.tar.gz"
+      sha256 "dcd51b50fceebac9c6a9d4a5c92c5d891e8b859c846b1d5cec7117c3789475c4" # arm
     else
-      url "https://github.com/gosantos/nosh/releases/download/v0.3.0/nosh-x86_64-apple-darwin.tar.gz"
-      sha256 "71e5d63cb2b03de7a0d074034ad5e9f087c7e163bbbd5efa1c05e7606fd2002b" # intel
+      url "https://github.com/gosantos/nosh/releases/download/v0.3.1/nosh-x86_64-apple-darwin.tar.gz"
+      sha256 "6181ed644a3508ecc39c53a385b4f3839c4a49455bc0e5793acc08c4925def1e" # intel
     end
   end
 
