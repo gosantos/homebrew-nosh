@@ -6,10 +6,10 @@ class Nosh < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/gosantos/nosh/releases/download/v0.4.1/nosh-aarch64-apple-darwin.tar.gz"
-      sha256 "8c363f70e3bdd93570c81e25ca21e1f0374d4a67ee5204ec498b3c5eaae56af4" # arm
+      sha256 "60ee7d7598b4f66dd692f37e3d884d779923acc667ef26a1a5493f89f9b4f255" # arm
     else
       url "https://github.com/gosantos/nosh/releases/download/v0.4.1/nosh-x86_64-apple-darwin.tar.gz"
-      sha256 "7b0e923e61e96464a1fe2a39e59dc330f6c478e5a8a6b08ad6617ab3d7a21e74" # intel
+      sha256 "c816c5b6475488fc6edb6be0dde33dae0748618aa0b4f468889aa5612ccccb28" # intel
     end
   end
 
